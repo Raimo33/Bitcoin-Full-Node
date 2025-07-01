@@ -1,0 +1,51 @@
+services:
+
+  tor:
+    build:
+      context: ./services/tor
+      dockerfile: Dockerfile
+      args:
+        GROUP_ID: 1001
+    container_name: tor
+    # environment:
+    volumes:
+      - tor_data:/var/lib/tor
+    # secrets:
+    ports:
+      - "9050:9050"
+      - "9051:9051"
+      - "9001:9001"
+    networks:
+      - bitcoin-net
+    restart: always
+    # depends_on:
+    init: true
+
+  knots:
+    build:
+      context: ./services/knots
+      dockerfile: Dockerfile
+      args:
+        GROUP_ID: 1001
+    container_name: knots
+    # environment:
+    volumes:
+      - /mnt/hdd/knots:/var/lib/knots
+      - tor_data:/var/lib/tor
+    # ports:
+    networks:
+      - bitcoin-net
+    restart: always
+    depends_on:
+      tor:
+        condition: service_healthy
+    init: true
+
+  mempool:
+
+networks:
+  bitcoin-net:
+    driver: bridge
+
+volumes:
+  tor_data:

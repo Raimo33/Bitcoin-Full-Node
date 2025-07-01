@@ -1,0 +1,9 @@
+ORPort 9001
+ExitRelay 0
+
+ControlPort 9051
+CookieAuthentication 1
+CookieAuthFileGroupReadable 1
+CookieAuthFile /var/lib/tor/control_auth_cookie
+
+DataDirectory /var/lib/tor
