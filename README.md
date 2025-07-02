@@ -21,12 +21,14 @@ Images size: 81.8MB + 37.7MB
 
 2. Create directories for persistent storage:
    - for Knots to store the blockchain (e.g., `/mnt/hdd/knots`)
-   - for Tor to store its data (e.g., `/var/lib/tor`)
+   - for Tor to store its data (e.g., `/var/lib/full-node/tor`)
+
+  WARNING: if you already have tor installed in your system, or if you're planning to install a tor client to interact with the full node, beware of not mixing the directories. One is for the tor service inside the container, the other is for the tor service running on your host system.
 
 3. Set ownership of the directories:
    ```bash
   chown -R 1000:1000 /mnt/hdd/knots
-  chown -R 1001:1001 /var/lib/tor
+  chown -R 1001:1001 /var/lib/full-node/tor
   ```
 
 4. Update the `.env` file with the correct paths and user/group IDs

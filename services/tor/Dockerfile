@@ -13,7 +13,7 @@ RUN groupmod -g ${TOR_GID} tor && \
 
 WORKDIR /var/lib/tor
 USER tor
-EXPOSE 8332 8333
+EXPOSE 8333
 
 VOLUME ["/var/lib/tor"]
 CMD ["tor", "-f", "/etc/tor/torrc"]

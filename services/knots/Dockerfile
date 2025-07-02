@@ -49,6 +49,7 @@ RUN chown -R knots:knots /etc/knots
 
 WORKDIR /var/lib/knots
 USER knots
-VOLUME ["/var/lib/knots", "/var/lib/tor"]
+EXPOSE 8332
 
+VOLUME ["/var/lib/knots", "/var/lib/tor"]
 CMD ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
