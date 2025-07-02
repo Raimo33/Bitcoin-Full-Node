@@ -1,6 +1,8 @@
 ORPort 9001
 ExitRelay 0
 
+SocksPort 0.0.0.0:9050
+
 ControlPort 9051
 CookieAuthentication 1
 CookieAuthFileGroupReadable 1

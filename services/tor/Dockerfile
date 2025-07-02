@@ -1,16 +1,15 @@
-FROM alpine:3.19
+FROM alpine:3.22
 
-ARG GROUP_ID
+ARG TOR_UID TOR_GID
 
-RUN apk add --no-cache tor netcat-openbsd
+RUN apk add --no-cache tor shadow netcat-openbsd
 
 COPY torrc /etc/tor/torrc
 RUN mkdir -p /var/lib/tor
 
-RUN addgroup -g $GROUP_ID tor
-RUN adduser -g tor -SDH tor
-RUN chown -R tor:tor /etc/tor /var/lib/tor
-RUN chmod 750 /etc/tor/
+RUN groupmod -g ${TOR_GID} tor && \
+    usermod -u ${TOR_UID} tor  && \
+    chown -R tor:tor /etc/tor
 
 WORKDIR /var/lib/tor
 USER tor

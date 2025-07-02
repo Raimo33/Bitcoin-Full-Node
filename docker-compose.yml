@@ -5,11 +5,12 @@ services:
       context: ./services/tor
       dockerfile: Dockerfile
       args:
-        GROUP_ID: 1001
+        TOR_UID: ${TOR_UID}
+        TOR_GID: ${TOR_GID}
     container_name: tor
     # environment:
     volumes:
-      - tor_data:/var/lib/tor
+      - ${TOR_DIR}:/var/lib/tor:rw
     # secrets:
     ports:
       - "9050:9050"
@@ -26,12 +27,14 @@ services:
       context: ./services/knots
       dockerfile: Dockerfile
       args:
-        GROUP_ID: 1001
+        KNOTS_UID: ${KNOTS_UID}
+        KNOTS_GID: ${KNOTS_GID}
+        TOR_GID: ${TOR_GID}
     container_name: knots
     # environment:
     volumes:
-      - /mnt/hdd/knots:/var/lib/knots
-      - tor_data:/var/lib/tor
+      - ${KNOTS_DIR}:/var/lib/knots:rw
+      - ${TOR_DIR}:/var/lib/tor:ro
     # ports:
     networks:
       - bitcoin-net
@@ -41,11 +44,9 @@ services:
         condition: service_healthy
     init: true
 
-  mempool:
+  # mempool:
+  #TODO mempool service
 
 networks:
   bitcoin-net:
     driver: bridge
-
-volumes:
-  tor_data:
