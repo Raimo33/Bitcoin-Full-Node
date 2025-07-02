@@ -9,8 +9,8 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 - Uses **Alpine Linux** for a lightweight image
 - Compiled from source for optimized binary
 
-Images build time: 7m 45s
-Images size: 81.8MB + 37.7MB
+Images build time: 7m 45s.
+Images size: 81.8MB + 37.7MB.
 
 ## First time setup instructions
 
