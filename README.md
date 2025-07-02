@@ -4,8 +4,8 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 
 - Bitcoin **Full Node**
 - Uses **Knots** for spam prevention
-- Enforces **Tor** for outgoing connections
-- Enforces **Tor** for incoming connections
+- Enforces **Tor** for all connections
+- Acts as **Tor Relay** to help the Tor network
 - Uses **Alpine Linux** for a lightweight image
 - Compiled from source for optimized binary
 
