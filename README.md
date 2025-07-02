@@ -2,12 +2,11 @@
 
 This project sets up a minimal Bitcoin full node with the maximum privacy.
 
-- Bitcoin Full Node
-- Uses Knots for spam prevention
-- Enforces Tor for outgoing connections
-- Enforces Tor for incoming connections
-- Acts as a Tor relayer to help the Tor network
-- Uses Alpine Linux for a lightweight image
+- Bitcoin **Full Node**
+- Uses **Knots** for spam prevention
+- Enforces **Tor** for outgoing connections
+- Enforces **Tor** for incoming connections
+- Uses **Alpine Linux** for a lightweight image
 - Disabled GUI for faster startup
 - Compiled from source for optimized binary
 
@@ -24,12 +23,11 @@ Images size: 81.8MB + 37.7MB
    - for Knots to store the blockchain (e.g., `/mnt/hdd/knots`)
    - for Tor to store its data (e.g., `/var/lib/tor`)
 
-3. Set ownership and permissions of the directories:
-   Ensure that the directories are owned by specific user and group IDs that will be used in the Docker containers. For example:
-    ```bash
-    drwxr-x--- 6 1001 1001 4096 Jan  3 00:42 knots
-    drwxr-x--- 4 1002 1002 4096 Jan  3 00:42 tor
-    ```
+3. Set ownership of the directories:
+   ```bash
+  chown -R 1000:1000 /mnt/hdd/knots
+  chown -R 1001:1001 /var/lib/tor
+  ```
 
 4. Update the `.env` file with the correct paths and user/group IDs
 

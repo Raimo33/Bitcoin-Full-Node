@@ -1,11 +1,17 @@
-ORPort 9001
-ExitRelay 0
+DataDirectory /var/lib/tor
 
 SocksPort 0.0.0.0:9050
 
-ControlPort 9051
+ControlPort 0.0.0.0:9051
 CookieAuthentication 1
-CookieAuthFileGroupReadable 1
 CookieAuthFile /var/lib/tor/control_auth_cookie
 
-DataDirectory /var/lib/tor
+HiddenServiceDir /var/lib/tor/knots_p2p/
+HiddenServicePort 8333 knots:8333
+
+HiddenServiceDir /var/lib/tor/knots_rpc/
+HiddenServicePort 8332 knots:8332
+
+DataDirectoryGroupReadable 1
+CookieAuthFileGroupReadable 1
+HiddenServiceDirGroupReadable 1

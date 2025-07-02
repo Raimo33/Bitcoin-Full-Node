@@ -13,9 +13,8 @@ services:
       - ${TOR_DIR}:/var/lib/tor:rw
     # secrets:
     ports:
-      - "9050:9050"
-      - "9051:9051"
-      - "9001:9001"
+      - "8333:8333"
+      - "8332:8332"
     networks:
       - bitcoin-net
     restart: always
@@ -35,13 +34,10 @@ services:
     volumes:
       - ${KNOTS_DIR}:/var/lib/knots:rw
       - ${TOR_DIR}:/var/lib/tor:ro
-    # ports:
     networks:
       - bitcoin-net
     restart: always
-    depends_on:
-      tor:
-        condition: service_healthy
+    # depends_on:
     init: true
 
   # mempool:

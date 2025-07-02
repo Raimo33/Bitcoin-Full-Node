@@ -37,7 +37,8 @@ ARG KNOTS_UID KNOTS_GID TOR_GID
 
 RUN addgroup -g ${KNOTS_GID} knots && \
     addgroup -g ${TOR_GID} tor && \
-    adduser -SDH -u ${KNOTS_UID} -g knots -G tor knots
+    adduser -SDH -u ${KNOTS_UID} -G knots knots && \
+    addgroup knots tor
 
 RUN mkdir -p /etc/knots
 
@@ -50,4 +51,4 @@ WORKDIR /var/lib/knots
 USER knots
 VOLUME ["/var/lib/knots", "/var/lib/tor"]
 
-CMD ["bitcoind", "-datadir=/var/lib/knots", "-conf=/etc/knots/bitcoin.conf"]
+CMD ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]

@@ -1,6 +1,6 @@
 FROM alpine:3.22
 
-ARG TOR_UID TOR_GID
+ARG TOR_UID TOR_GID 
 
 RUN apk add --no-cache tor shadow netcat-openbsd
 
@@ -13,7 +13,7 @@ RUN groupmod -g ${TOR_GID} tor && \
 
 WORKDIR /var/lib/tor
 USER tor
-EXPOSE 9050 9051 9001
+EXPOSE 8332 8333
 
 VOLUME ["/var/lib/tor"]
 CMD ["tor", "-f", "/etc/tor/torrc"]
