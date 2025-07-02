@@ -7,7 +7,6 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 - Enforces **Tor** for outgoing connections
 - Enforces **Tor** for incoming connections
 - Uses **Alpine Linux** for a lightweight image
-- Disabled GUI for faster startup
 - Compiled from source for optimized binary
 
 Images build time: 7m 45s
