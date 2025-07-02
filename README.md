@@ -23,18 +23,20 @@ Images size: 81.8MB + 37.7MB
    - for Knots to store the blockchain (e.g., `/mnt/hdd/knots`)
    - for Tor to store its data (e.g., `/var/lib/full-node/tor`)
 
-  WARNING: if you already have tor installed in your system, or if you're planning to install a tor client to interact with the full node, beware of not mixing the directories. One is for the tor service inside the container, the other is for the tor service running on your host system.
+  WARNING: *if you already have tor installed in your system, or if you're planning to install a tor client to interact with the full node, beware of not mixing the directories. One is for the tor service inside the container, the other is for the tor service running on your host system.*
 
 3. Set ownership of the directories:
    ```bash
-  chown -R 1000:1000 /mnt/hdd/knots
-  chown -R 1001:1001 /var/lib/full-node/tor
-  ```
+   chown -R 1000:1000 /mnt/hdd/knots
+   chown -R 1001:1001 /var/lib/full-node/tor
+   ```
 
 4. Update the `.env` file with the correct paths and user/group IDs
 
-5. Build the Docker images:
-   ```bash
+5. Edit the `services/knots/bitcoin.conf` file to set your RPC credentials and restrict RPC access to specific IPs.
+
+6. Build the Docker images:
+   ```
    docker-compose build
    ```
 
@@ -46,9 +48,11 @@ Images size: 81.8MB + 37.7MB
    ```
 
 - Stop:
-   ```bash
-    docker-compose down
-    ```
+   ```
+  docker-compose down
+  ```
+
+NOTE: *Docker automatically stops and restarts containers on system reboot.*
 
 more information about the available docker-compose commands can be found in the [docker-compose documentation](https://docs.docker.com/reference/cli/docker/compose/).
 

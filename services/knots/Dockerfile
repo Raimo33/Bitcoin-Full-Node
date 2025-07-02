@@ -2,7 +2,8 @@ FROM alpine:3.22 AS builder
 
 RUN apk add --no-cache \
   build-base autoconf automake pkgconfig libtool \
-  boost-dev zeromq-dev libevent-dev unzip binutils
+  boost-dev zeromq-dev libevent-dev unzip binutils \
+  sqlite-dev
 
 ADD https://codeload.github.com/bitcoinknots/bitcoin/zip/refs/heads/28.x-knots /tmp/bitcoin.zip
 RUN cd /tmp && unzip bitcoin.zip && mv bitcoin-28.x-knots /bitcoin
@@ -20,8 +21,9 @@ RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
   --disable-man \
   --disable-shared \
   --disable-static \
-  --disable-util-wallet \
+  --enable-wallet \
   --without-bdb \
+  --with-sqlite \
   --with-gui=no \
   --bindir=/usr/bin/knots
 
@@ -31,7 +33,7 @@ RUN strip --strip-unneeded /usr/bin/knots/*
 
 FROM alpine:3.22
 
-RUN apk add --no-cache boost zeromq libevent
+RUN apk add --no-cache boost zeromq libevent sqlite
 
 ARG KNOTS_UID KNOTS_GID TOR_GID
 
