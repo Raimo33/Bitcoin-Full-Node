@@ -1,13 +1,13 @@
 services:
 
-  tor:
+  tor-client:
     build:
-      context: ./services/tor
+      context: ./services/tor-client
       dockerfile: Dockerfile
       args:
         TOR_UID: ${TOR_UID}
         TOR_GID: ${TOR_GID}
-    container_name: tor
+    container_name: tor-client
     # environment:
     volumes:
       - ${TOR_DIR}:/var/lib/tor:rw
@@ -41,6 +41,25 @@ services:
     restart: always
     # depends_on:
     init: true
+
+  # tor-relay:
+  #   build:
+  #     context: ./services/tor-relay
+  #     dockerfile: Dockerfile
+  #     args:
+  #       TOR_UID: ${TOR_UID}
+  #       TOR_GID: ${TOR_GID}
+  #   container_name: tor-relay
+  #   # environment:
+  #   volumes:
+  #     - ${TOR_DIR}:/var/lib/tor:rw
+  #   # secrets:
+  #   ports:
+  #   networks:
+  #     - bitcoin-net
+  #   restart: always
+  #   # depends_on:
+  #   init: true
 
   # mempool:
   #TODO mempool service

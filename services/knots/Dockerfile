@@ -5,6 +5,7 @@ RUN apk add --no-cache \
   boost-dev zeromq-dev libevent-dev unzip binutils \
   sqlite-dev
 
+#TODO verify gpg key (ADD does that)
 ADD https://codeload.github.com/bitcoinknots/bitcoin/zip/refs/heads/28.x-knots /tmp/bitcoin.zip
 RUN cd /tmp && unzip bitcoin.zip && mv bitcoin-28.x-knots /bitcoin
 
@@ -13,19 +14,19 @@ WORKDIR /bitcoin
 RUN ./autogen.sh
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
   --quiet \
+  --bindir=/usr/bin/knots \
+  --disable-dependency-tracking \
   --disable-tests \
   --disable-gui-tests \
   --disable-bench \
   --disable-fuzz-binary \
-  --disable-dependency-tracking \
   --disable-man \
   --disable-shared \
   --disable-static \
   --enable-wallet \
   --without-bdb \
   --with-sqlite \
-  --with-gui=no \
-  --bindir=/usr/bin/knots
+  --with-gui=no
 
 RUN make -j$(nproc)
 RUN make install
@@ -43,7 +44,6 @@ RUN addgroup -g ${KNOTS_GID} knots && \
     addgroup knots tor
 
 RUN mkdir -p /etc/knots
-
 COPY --from=builder /usr/bin/knots/ /usr/bin/
 COPY bitcoin.conf /etc/knots/bitcoin.conf
 
@@ -55,3 +55,4 @@ EXPOSE 8332
 
 VOLUME ["/var/lib/knots", "/var/lib/tor"]
 CMD ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
+#TODO fix unreachable node. ephemeral hidden service issue

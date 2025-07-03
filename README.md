@@ -14,8 +14,8 @@ Images size: 81.8MB + 37.7MB.
 ## First time setup instructions
 
 1. Install Docker and Docker Compose on your system:
-    - [Docker installation guide](https://docs.docker.com/get-docker/)
-    - [Docker Compose installation guide](https://docs.docker.com/compose/install/)
+    - [Docker installation guide](https://docs.docker.com/engine/install/)
+    - [Docker Compose installation guide](https://docs.docker.com/compose/install/standalone)
 
 2. Create directories for persistent storage:
    - for Knots to store the blockchain (e.g., `/mnt/hdd/knots`)
