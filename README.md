@@ -9,7 +9,7 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 - Uses **Alpine Linux** for a lightweight image
 - Compiled from source for optimized binary
 
-Images size: 81.8MB + 37.7MB.
+Images size: 89.7MB + 20.2MB
 
 ## First time setup instructions
 
