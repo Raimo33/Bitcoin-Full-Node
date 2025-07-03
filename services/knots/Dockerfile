@@ -1,44 +1,43 @@
 FROM alpine:3.22 AS builder
 
 RUN apk add --no-cache \
-  build-base autoconf automake pkgconfig libtool \
-  boost-dev zeromq-dev libevent-dev unzip binutils \
-  sqlite-dev gnupg
+    build-base boost-dev zeromq-dev libevent-dev sqlite-dev \
+    gnupg coreutils binutils
 
-ARG _BASE_URL=https://github.com/bitcoinknots/bitcoin/releases/download/v28.1.knots20250305
+ARG _BASE_URL=https://bitcoinknots.org/files/28.x/28.1.knots20250305
+ARG _RELEASE=bitcoin-28.1.knots20250305
 
-ADD ${_BASE_URL}/bitcoin-28.1.knots20250305.tar.gz  /tmp/
-ADD ${_BASE_URL}/SHA256SUMS                         /tmp/
-ADD ${_BASE_URL}/SHA256SUMS.asc                     /tmp/
-COPY luke-jr.asc                                    /tmp/
+ADD ${_BASE_URL}/${_RELEASE}.tar.gz    /tmp/
+ADD ${_BASE_URL}/SHA256SUMS            /tmp/
+ADD ${_BASE_URL}/SHA256SUMS.asc        /tmp/
+COPY gpg/                              /tmp/gpg/
 
 WORKDIR /tmp
 
-RUN gpg --import luke-jr.asc && \
+RUN gpg --import gpg/* && \
     gpg --verify SHA256SUMS.asc SHA256SUMS && \
     sha256sum -c SHA256SUMS --ignore-missing
 
-RUN tar -xzf bitcoin-28.1.knots20250305.tar.gz && \
-    mv bitcoin-28.1.knots20250305 bitcoin
+RUN tar -xzf ${_RELEASE}.tar.gz && \
+    mv ${_RELEASE} bitcoin
 
-WORKDIR /bitcoin
+WORKDIR /tmp/bitcoin
 
-RUN ./autogen.sh
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
-  --quiet \
-  --bindir=/usr/bin/knots \
-  --disable-dependency-tracking \
-  --disable-tests \
-  --disable-gui-tests \
-  --disable-bench \
-  --disable-fuzz-binary \
-  --disable-man \
-  --disable-shared \
-  --disable-static \
-  --enable-wallet \
-  --without-bdb \
-  --with-sqlite \
-  --with-gui=no
+    --quiet \
+    --bindir=/usr/bin/knots \
+    --disable-dependency-tracking \
+    --disable-tests \
+    --disable-gui-tests \
+    --disable-bench \
+    --disable-fuzz-binary \
+    --disable-man \
+    --disable-shared \
+    --disable-static \
+    --enable-wallet \
+    --without-bdb \
+    --with-sqlite \
+    --with-gui=no
 
 RUN make -j$(nproc)
 RUN make install

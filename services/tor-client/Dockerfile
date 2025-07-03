@@ -1,29 +1,41 @@
 FROM alpine:3.22 AS builder
 
 RUN apk add --no-cache \
-    build-base autoconf automake pkgconfig libtool \
-    binutils libevent-dev openssl-dev zlib-dev
+    build-base libevent-dev openssl-dev zlib-dev \
+    gnupg coreutils binutils 
 
-#TODO verify gpg key (ADD does that)
-ADD https://gitlab.torproject.org/tpo/core/tor/-/archive/main/tor-main.tar.gz /tmp/tor.tar.gz
-RUN cd /tmp && tar -xzf tor.tar.gz && mv tor-main /tor-main
+ARG _BASE_URL=https://dist.torproject.org
+ARG _RELEASE=tor-0.4.8.9
 
-WORKDIR /tor-main
+ADD ${_BASE_URL}/${_RELEASE}.tar.gz               /tmp/
+ADD ${_BASE_URL}/${_RELEASE}.tar.gz.sha256sum     /tmp/SHA256SUM
+ADD ${_BASE_URL}/${_RELEASE}.tar.gz.sha256sum.asc /tmp/SHA256SUM.asc
+COPY gpg/                                         /tmp/gpg/
 
-RUN ./autogen.sh
+WORKDIR /tmp
+
+RUN gpg --import gpg/* && \
+    gpg --verify SHA256SUM.asc SHA256SUM && \
+    sha256sum -c SHA256SUM
+
+RUN tar -xzf ${_RELEASE}.tar.gz && \
+    mv ${_RELEASE} tor
+
+WORKDIR /tmp/tor
+
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
-  --quiet \
-  --bindir=/usr/bin/tor \
-  --disable-dependency-tracking \
-  --disable-unittests \
-  --disable-system-torrc \
-  --disable-manpage \
-  --disable-html-manual \
-  --disable-asciidoc \
-  --disable-module-relay \
-  --disable-module-dirauth \
-  --enable-lzma \
-  --enable-zstd
+    --quiet \
+    --bindir=/usr/bin/tor \
+    --disable-dependency-tracking \
+    --disable-unittests \
+    --disable-system-torrc \
+    --disable-manpage \
+    --disable-html-manual \
+    --disable-asciidoc \
+    --disable-module-relay \
+    --disable-module-dirauth \
+    --enable-lzma \
+    --enable-zstd
 
 RUN make -j$(nproc)
 RUN make install
