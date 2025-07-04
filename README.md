@@ -40,21 +40,16 @@ Images size:
 4. Update the `.env` file with the correct paths, user/group IDs, RPC credentials and public IP address.
 
 5. Build the Docker images:
-   ```
+   ```bash
    docker-compose build
    ```
 
 ## Run the services
 
-- Start:
-   ```bash
-   docker-compose up -d
-   ```
-
-- Stop:
-   ```
-  docker-compose down
-  ```
+```bash
+docker-compose up -d   # Start
+docker-compose down    # Stop
+```
 
 NOTE: *Docker automatically stops and restarts containers on system reboot.*
 
