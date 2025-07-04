@@ -1,0 +1,8 @@
+[mysqld]
+bind-address = localhost
+port = 3306
+skip-networking = 0
+
+general_log = 1
+slow_query_log = 1
+log_error = /dev/stderr

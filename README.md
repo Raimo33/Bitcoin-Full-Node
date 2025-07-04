@@ -2,14 +2,23 @@
 
 This project sets up a minimal Bitcoin full node with the maximum privacy.
 
-- Bitcoin **Full Node**
-- Uses **Knots** for spam prevention
+- **Full** blockchain state
+- Uses **Knots** to fight the spam
 - Enforces **Tor** for all connections
 - Acts as **Tor Relay** to help the Tor network
-- Uses **Alpine Linux** for a lightweight image
-- Compiled from source for optimized binary
+- Uses **Alpine Linux** for lightweight images
+- **Compiled** from source for optimized binary
+- **Signature verification** for all components
+- Mempool **Visualizer** for monitoring
 
-Images size: 89.7MB + 20.2MB
+#TODO: monero full node
+#TODO: monero CPU miner
+
+Images size:
+- Knots: 89.7MB
+- Tor client: 20.2MB
+- Tor relay: 20.4MB
+- Mempool visualizer (pulled): 1GB
 
 ## First time setup instructions
 
@@ -29,11 +38,9 @@ Images size: 89.7MB + 20.2MB
    chown -R 1001:1001 /var/lib/full-node/tor
    ```
 
-4. Update the `.env` file with the correct paths and user/group IDs
+4. Update the `.env` file with the correct paths, user/group IDs, and RPC credentials.
 
-5. Edit the `services/knots/bitcoin.conf` file to set your RPC credentials and restrict RPC access to specific IPs.
-
-6. Build the Docker images:
+5. Build the Docker images:
    ```
    docker-compose build
    ```

@@ -71,5 +71,6 @@ USER knots
 EXPOSE 8332
 
 VOLUME ["/var/lib/knots", "/var/lib/tor"]
-CMD ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
+ENTRYPOINT ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
+
 #TODO fix unreachable node. ephemeral hidden service issue

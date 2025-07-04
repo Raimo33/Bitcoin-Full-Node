@@ -1,0 +1,13 @@
+remove alpine::latest. unpredictable, could break.
+
+mariadb configuration file fixed, instead of relying to the default one. considering that you pull from alpine:latest, and then install whichever mariadb version is available, relying on the default config file is error prone and not future proof.
+
+multi stage build, reducing the size from to
+
+generally cleaner
+
+init-db.sh script
+
+use of mysqladmin instead of brute forcing sleep
+
+removed unused nginx.conf (with ssl)

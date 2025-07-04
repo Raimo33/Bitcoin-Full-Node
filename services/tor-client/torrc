@@ -1,4 +1,4 @@
-DataDirectory /var/lib/tor
+DataDirectory /var/lib/tor/client
 
 SocksPort 0.0.0.0:9050
 
