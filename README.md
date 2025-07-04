@@ -9,8 +9,8 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 - Uses **Alpine Linux** for lightweight images
 - **Compiled** from source for optimized binary
 - **Signature verification** for all components
-- Mempool **Visualizer** for monitoring
 
+#TODO: mempool visualizer
 #TODO: monero full node
 #TODO: monero CPU miner
 
@@ -18,7 +18,6 @@ Images size:
 - Knots: 89.7MB
 - Tor client: 20.2MB
 - Tor relay: 20.4MB
-- Mempool visualizer (pulled): 1GB
 
 ## First time setup instructions
 
@@ -38,7 +37,7 @@ Images size:
    chown -R 1001:1001 /var/lib/full-node/tor
    ```
 
-4. Update the `.env` file with the correct paths, user/group IDs, and RPC credentials.
+4. Update the `.env` file with the correct paths, user/group IDs, RPC credentials and public IP address.
 
 5. Build the Docker images:
    ```

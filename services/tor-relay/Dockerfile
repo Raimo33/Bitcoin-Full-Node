@@ -67,4 +67,4 @@ USER tor
 EXPOSE 9001 9030
 
 VOLUME ["/var/lib/tor"]
-CMD ["tor", "-f", "/etc/tor/torrc"]
+ENTRYPOINT ["tor", "-f", "/etc/tor/torrc"]

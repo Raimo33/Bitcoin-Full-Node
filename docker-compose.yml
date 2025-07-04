@@ -42,6 +42,7 @@ services:
     restart: always
     # depends_on:
     init: true
+    command: --Address ${HOST_PUBLIC_IP}
 
   knots:
     build:
@@ -66,25 +67,6 @@ services:
       - tor-client
     init: true
     command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD}
-
-  mempool:
-    image: mempool/mempool:v1.0
-    container_name: mempool
-    environment:
-      BITCOIN_NODE_HOST: 172.28.0.4
-      BITCOIN_NODE_USER: ${RPC_USER}
-      BITCOIN_NODE_PASS: ${RPC_PASSWORD}
-    # volumes:
-    # secrets:
-    ports:
-      - "80:80"
-    networks:
-      nodenet:
-        ipv4_address: 172.28.0.5
-    restart: always
-    depends_on:
-      - knots
-    init: true
 
 networks:
   nodenet:
