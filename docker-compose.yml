@@ -12,8 +12,7 @@ services:
     volumes:
       - ${TOR_DIR}:/var/lib/tor:rw
     # secrets:
-    ports:
-      - "8333:8333"
+    # ports:
     networks:
       nodenet:
         ipv4_address: 172.28.0.2

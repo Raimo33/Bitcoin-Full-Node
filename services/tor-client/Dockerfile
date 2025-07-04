@@ -65,7 +65,6 @@ COPY torrc /etc/tor/torrc
 
 WORKDIR /var/lib/tor
 USER tor
-EXPOSE 8333
 
 VOLUME ["/var/lib/tor"]
 CMD ["tor", "-f", "/etc/tor/torrc"]
