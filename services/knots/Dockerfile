@@ -50,27 +50,16 @@ done
 
 FROM alpine:3.22
 
-RUN apk add --no-cache boost zeromq libevent sqlite
-
-ARG KNOTS_UID KNOTS_GID TOR_GID
-
-RUN mkdir -p /etc/knots
-
-RUN addgroup -g ${KNOTS_GID} knots && \
-    addgroup -g ${TOR_GID} tor && \
-    adduser -SDH -u ${KNOTS_UID} -G knots knots && \
-    addgroup knots tor
+RUN apk add --no-cache \
+    boost zeromq libevent sqlite
 
 COPY --from=builder /usr/bin/knots/ /usr/bin/
-COPY bitcoin.conf /etc/knots/bitcoin.conf
-
-RUN chown -R knots:knots /etc/knots
+COPY bitcoin.conf   /etc/knots/bitcoin.conf
 
 WORKDIR /var/lib/knots
-USER knots
 EXPOSE 8332
 
-VOLUME ["/var/lib/knots", "/var/lib/tor"]
+VOLUME ["/var/lib/knots"]
 ENTRYPOINT ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
 
 #TODO fix unreachable node. ephemeral hidden service issue

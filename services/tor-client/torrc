@@ -3,8 +3,4 @@ DataDirectory /var/lib/tor/client
 SocksPort 0.0.0.0:9050
 
 ControlPort 0.0.0.0:9051
-CookieAuthentication 1
-CookieAuthFile /var/lib/tor/control_auth_cookie
-
-DataDirectoryGroupReadable 1
-CookieAuthFileGroupReadable 1
+CookieAuthentication 0 

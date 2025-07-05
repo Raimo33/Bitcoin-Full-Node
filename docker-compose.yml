@@ -1,71 +1,107 @@
 services:
 
+#TODO remove root container access
+#TODO Fix p2p onion address not accessible from outside
+
   tor-client:
     build:
       context: ./services/tor-client
       dockerfile: Dockerfile
-      args:
-        TOR_UID: ${TOR_UID}
-        TOR_GID: ${TOR_GID}
+      # args:
     container_name: tor-client
     # environment:
     volumes:
-      - ${TOR_DIR}:/var/lib/tor:rw
+      - tor-data:/var/lib/tor:rw
     # secrets:
-    # ports:
     networks:
       nodenet:
         ipv4_address: 172.28.0.2
-    restart: always
+    # ports:
     # depends_on:
+    restart: always
     init: true
+    user: root
+    command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
 
   tor-relay:
     build:
       context: ./services/tor-relay
       dockerfile: Dockerfile
-      args:
-        TOR_UID: ${TOR_UID}
-        TOR_GID: ${TOR_GID}
+      # args:
     container_name: tor-relay
     # environment:
     volumes:
-      - ${TOR_DIR}:/var/lib/tor:rw
+      - tor-data:/var/lib/tor:rw
     # secrets:
-    ports:
-      - "9001:9001"
-      - "9030:9030"
     networks:
       nodenet:
         ipv4_address: 172.28.0.3
-    restart: always
+    ports:
+      - "9001:9001"
+      - "9030:9030"
     # depends_on:
+    restart: always
     init: true
+    user: root
     command: --Address ${HOST_PUBLIC_IP}
 
   knots:
     build:
       context: ./services/knots
       dockerfile: Dockerfile
-      args:
-        KNOTS_UID: ${KNOTS_UID}
-        KNOTS_GID: ${KNOTS_GID}
-        TOR_GID: ${TOR_GID}
+      # args:
     container_name: knots
+    # environment:
     volumes:
-      - ${KNOTS_DIR}:/var/lib/knots:rw
-      - ${TOR_DIR}:/var/lib/tor:ro
+      - knots-data:/var/lib/knots:rw
     # secrets:
-    ports:
-      - "8332:8332"
     networks:
       nodenet:
         ipv4_address: 172.28.0.4
-    restart: always
+    ports:
+      - "8332:8332"
     depends_on:
       - tor-client
+    restart: always
     init: true
-    command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD}
+    user: root
+    command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
+
+  # mempool-frontend:
+  #   image: mempool/frontend:latest
+  #   container_name: mempool-frontend
+  #   environment:
+  #     FRONTEND_HTTP_PORT: 8080
+  #     BACKEND_MAINNET_HTTP_HOST: mempool-backend
+  #   # volumes:
+  #   # secrets:
+  #   # networks:
+  #   ports:
+  #     - 80:8080
+  #   depends_on:
+  #     - mempool-backend
+  #   restart: always
+  #   init: true
+
+  # mempool-backend:
+  #   image: mempool/backend:latest
+  #   # container_name:
+  #   env_file: api.env
+  #   volumes:
+  #     - mempool-data:/backend/cache:rw
+  #   # secrets:
+  #   # networks:
+  #   # ports:
+  #   depends_on:
+  #     knots:
+  #       condition: service_healthy
+  #     mariadb:
+  #       condition: service_healthy
+  #   restart: always
+  #   init: true
+
+  # mariadb:
+    
 
 networks:
   nodenet:
@@ -73,3 +109,14 @@ networks:
     ipam:
       config:
         - subnet: 172.28.0.0/28
+
+volumes:
+  tor-data:
+  # mempool-data:
+  # mariadb-data:
+  knots-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${KNOTS_DIR}
+      o: bind

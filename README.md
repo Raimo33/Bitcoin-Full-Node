@@ -25,19 +25,17 @@ Images size:
     - [Docker installation guide](https://docs.docker.com/engine/install/)
     - [Docker Compose installation guide](https://docs.docker.com/compose/install/standalone)
 
-2. Create directories for persistent storage:
-   - for Knots to store the blockchain (e.g., `/mnt/hdd/knots`)
-   - for Tor to store its data (e.g., `/var/lib/full-node/tor`)
+2. Edit the `.env` file:
+```
+KNOTS_DIR=/mnt/hdd/knots # Directory where the blockchain will be stored
+HOST_PUBLIC_IP=87.19.107.144 # Public IP address of your host (used for Tor relay)
 
-  WARNING: *if you already have tor installed in your system, or if you're planning to install a tor client to interact with the full node, beware of not mixing the directories. One is for the tor service inside the container, the other is for the tor service running on your host system.*
+RPC_USER=your_rpc_user # RPC username for Knots
+RPC_PASSWORD=your_rpc_password # RPC password for Knots
 
-3. Set ownership of the directories:
-   ```bash
-   chown -R 1000:1000 /mnt/hdd/knots
-   chown -R 1001:1001 /var/lib/full-node/tor
-   ```
-
-4. Update the `.env` file with the correct paths, user/group IDs, RPC credentials and public IP address.
+TOR_CONTROL_PASSWORD=your_tor_control_password # Password for Tor control port
+TOR_CONTROL_HASHED_PASSWORD=16:ADDBD7CF108C995F60F831F115BA5EB95322FC4645433CDEB8948A57DF # Generate this using `tor --hash-password your_tor_control_password`
+```
 
 5. Build the Docker images:
    ```bash

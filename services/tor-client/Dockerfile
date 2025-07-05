@@ -48,23 +48,13 @@ done
 
 FROM alpine:3.22
 
-ARG TOR_UID TOR_GID
-
 RUN apk add --no-cache \
     openssl zlib libevent
-
-RUN mkdir -p /var/lib/tor && \
-    mkdir -p /etc/tor
-
-RUN addgroup -g ${TOR_GID} tor && \
-    adduser -SDH -u ${TOR_UID} -G tor tor && \
-    chown -R tor:tor /etc/tor
 
 COPY --from=builder /usr/bin/tor /usr/bin
 COPY torrc /etc/tor/torrc
 
 WORKDIR /var/lib/tor
-USER tor
 
 VOLUME ["/var/lib/tor"]
-CMD ["tor", "-f", "/etc/tor/torrc"]
+ENTRYPOINT ["tor", "-f", "/etc/tor/torrc"]
