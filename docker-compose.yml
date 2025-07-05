@@ -1,7 +1,6 @@
 services:
 
-#TODO remove root container access
-#TODO Fix p2p onion address not accessible from outside
+#TODO Fix p2p onion address not accessible from outside (likely a tor on alpine issue)
 
   tor-client:
     build:
@@ -20,8 +19,11 @@ services:
     # depends_on:
     restart: always
     init: true
-    user: root
+    user: 1000:1000
     command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
+    post_start:
+      - command: chown -R 1000:1000 /var/lib/tor
+        user: root
 
   tor-relay:
     build:
@@ -42,8 +44,11 @@ services:
     # depends_on:
     restart: always
     init: true
-    user: root
+    user: 1000:1000
     command: --Address ${HOST_PUBLIC_IP}
+    post_start:
+      - command: chown -R 1000:1000 /var/lib/tor
+        user: root
 
   knots:
     build:
@@ -64,44 +69,11 @@ services:
       - tor-client
     restart: always
     init: true
-    user: root
+    user: 1000:1000
     command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
-
-  # mempool-frontend:
-  #   image: mempool/frontend:latest
-  #   container_name: mempool-frontend
-  #   environment:
-  #     FRONTEND_HTTP_PORT: 8080
-  #     BACKEND_MAINNET_HTTP_HOST: mempool-backend
-  #   # volumes:
-  #   # secrets:
-  #   # networks:
-  #   ports:
-  #     - 80:8080
-  #   depends_on:
-  #     - mempool-backend
-  #   restart: always
-  #   init: true
-
-  # mempool-backend:
-  #   image: mempool/backend:latest
-  #   # container_name:
-  #   env_file: api.env
-  #   volumes:
-  #     - mempool-data:/backend/cache:rw
-  #   # secrets:
-  #   # networks:
-  #   # ports:
-  #   depends_on:
-  #     knots:
-  #       condition: service_healthy
-  #     mariadb:
-  #       condition: service_healthy
-  #   restart: always
-  #   init: true
-
-  # mariadb:
-    
+    post_start:
+      - command: chown -R 1000:1000 /var/lib/knots
+        user: root
 
 networks:
   nodenet:
@@ -112,8 +84,6 @@ networks:
 
 volumes:
   tor-data:
-  # mempool-data:
-  # mariadb-data:
   knots-data:
     driver: local
     driver_opts:

@@ -1,4 +1,4 @@
-# Full Node
+# Bitcoin Full Node
 
 This project sets up a minimal Bitcoin full node with the maximum privacy.
 
@@ -8,11 +8,7 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 - Acts as **Tor Relay** to help the Tor network
 - Uses **Alpine Linux** for lightweight images
 - **Compiled** from source for optimized binary
-- **Signature verification** for all components
-
-#TODO: mempool visualizer
-#TODO: monero full node
-#TODO: monero CPU miner
+- GPG **Signature verification** for all components
 
 Images size:
 - Knots: 89.7MB
@@ -53,6 +49,6 @@ NOTE: *Docker automatically stops and restarts containers on system reboot.*
 
 more information about the available docker-compose commands can be found in the [docker-compose documentation](https://docs.docker.com/reference/cli/docker/compose/).
 
-## Access the block explorer
+## Accessing the node
 
-#TODO: mempool explorer service
+The node is now listening for RPC connections on port `8332` of the host machine. You can interact with it using the `bitcoin-cli` command, software wallets, mempool explorers, or any other Core/Knots RPC compatible client.
