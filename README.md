@@ -22,7 +22,7 @@ Images size:
     - [Docker Compose installation guide](https://docs.docker.com/compose/install/standalone)
 
 2. Edit the `.env` file:
-```
+```bash
 # directories where persistent data will be stored
 KNOTS_DATA=/mnt/hdd/bitcoin/knots
 TOR_DATA=/var/lib/bitcoin/tor
