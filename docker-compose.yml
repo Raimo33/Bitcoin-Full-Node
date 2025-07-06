@@ -10,7 +10,7 @@ services:
     container_name: tor-client
     # environment:
     volumes:
-      - tor-data:/var/lib/tor:rw
+      - ${TOR_DATA}:/var/lib/tor:rw
     # secrets:
     networks:
       nodenet:
@@ -19,11 +19,8 @@ services:
     # depends_on:
     restart: always
     init: true
-    user: 1000:1000
+    user: ${UID}
     command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
-    post_start:
-      - command: chown -R 1000:1000 /var/lib/tor
-        user: root
 
   tor-relay:
     build:
@@ -33,7 +30,7 @@ services:
     container_name: tor-relay
     # environment:
     volumes:
-      - tor-data:/var/lib/tor:rw
+      - ${TOR_DATA}:/var/lib/tor:rw
     # secrets:
     networks:
       nodenet:
@@ -44,11 +41,8 @@ services:
     # depends_on:
     restart: always
     init: true
-    user: 1000:1000
+    user: ${UID}
     command: --Address ${HOST_PUBLIC_IP}
-    post_start:
-      - command: chown -R 1000:1000 /var/lib/tor
-        user: root
 
   knots:
     build:
@@ -58,7 +52,7 @@ services:
     container_name: knots
     # environment:
     volumes:
-      - knots-data:/var/lib/knots:rw
+      - ${KNOTS_DATA}:/var/lib/knots:rw
     # secrets:
     networks:
       nodenet:
@@ -69,11 +63,8 @@ services:
       - tor-client
     restart: always
     init: true
-    user: 1000:1000
+    user: ${UID}
     command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
-    post_start:
-      - command: chown -R 1000:1000 /var/lib/knots
-        user: root
 
 networks:
   nodenet:
@@ -81,12 +72,3 @@ networks:
     ipam:
       config:
         - subnet: 172.28.0.0/28
-
-volumes:
-  tor-data:
-  knots-data:
-    driver: local
-    driver_opts:
-      type: none
-      device: ${KNOTS_DIR}
-      o: bind
