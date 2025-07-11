@@ -8,12 +8,12 @@ ARG VERSION=0.4.8.9
 ARG BASE_URL=https://dist.torproject.org
 ARG TARBALL=tor-$VERSION.tar.gz
 
-ADD $BASE_URL/$TARBALL                /tmp/
-ADD $BASE_URL/$TARBALL.sha256sum      /tmp/SHA256SUM
-ADD $BASE_URL/$TARBALL.sha256sum.asc  /tmp/SHA256SUM.asc
-COPY gpg/                             /tmp/gpg/
-
 WORKDIR /tmp
+
+ADD $BASE_URL/$TARBALL                .
+ADD $BASE_URL/$TARBALL.sha256sum      ./SHA256SUM
+ADD $BASE_URL/$TARBALL.sha256sum.asc  ./SHA256SUM.asc
+COPY gpg/                             ./gpg/
 
 RUN gpg --import gpg/* && \
     gpg --verify SHA256SUM.asc SHA256SUM && \

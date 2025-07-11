@@ -9,12 +9,12 @@ ARG VERSION=28.1.knots20250305
 ARG BASE_URL=https://bitcoinknots.org/files/$MAJOR_VERSION.x/$VERSION
 ARG TARBALL=bitcoin-$VERSION.tar.gz
 
-ADD $BASE_URL/$TARBALL        /tmp/
-ADD $BASE_URL/SHA256SUMS      /tmp/
-ADD $BASE_URL/SHA256SUMS.asc  /tmp/
-COPY gpg/                     /tmp/gpg/
-
 WORKDIR /tmp
+
+ADD $BASE_URL/$TARBALL        .
+ADD $BASE_URL/SHA256SUMS      .
+ADD $BASE_URL/SHA256SUMS.asc  .
+COPY gpg/                     ./gpg/
 
 RUN gpg --import gpg/* && \
     gpg --verify SHA256SUMS.asc SHA256SUMS && \
