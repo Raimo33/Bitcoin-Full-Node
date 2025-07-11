@@ -1,7 +1,5 @@
 services:
 
-#TODO Fix p2p onion address not accessible from outside (likely a tor on alpine issue)
-
   tor-client:
     build:
       context: ./services/tor-client

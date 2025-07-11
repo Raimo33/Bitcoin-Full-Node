@@ -18,10 +18,7 @@ RUN gpg --import gpg/* && \
     gpg --verify SHA256SUM.asc SHA256SUM && \
     sha256sum -c SHA256SUM
 
-RUN tar -xzf ${_RELEASE}.tar.gz && \
-    mv ${_RELEASE} tor
-
-WORKDIR /tmp/tor
+RUN tar -xzf ${_RELEASE}.tar.gz --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \
