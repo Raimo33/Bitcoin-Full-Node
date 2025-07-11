@@ -42,6 +42,25 @@ services:
     user: ${UID}
     command: --Address ${HOST_PUBLIC_IP}
 
+  i2p:
+    build:
+      context: ./services/i2p
+      dockerfile: Dockerfile
+      # args:
+    container_name: i2p
+    # environment:
+    volumes:
+      - ${I2P_DATA}:/var/lib/i2p:rw
+    # secrets:
+    networks:
+      nodenet:
+        ipv4_address: 172.28.0.4
+    # ports:
+    # depends_on:
+    restart: always
+    init: true
+    user: ${UID}
+
   knots:
     build:
       context: ./services/knots
@@ -59,6 +78,7 @@ services:
       - "8332:8332"
     depends_on:
       - tor-client
+      - i2p
     restart: always
     init: true
     user: ${UID}

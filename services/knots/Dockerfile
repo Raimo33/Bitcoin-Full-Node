@@ -4,13 +4,15 @@ RUN apk add --no-cache \
     build-base boost-dev zeromq-dev libevent-dev sqlite-dev \
     gnupg coreutils binutils
 
-ARG _BASE_URL=https://bitcoinknots.org/files/28.x/28.1.knots20250305
-ARG _RELEASE=bitcoin-28.1.knots20250305
+ARG MAJOR_VERSION=28
+ARG VERSION=28.1.knots20250305
+ARG BASE_URL=https://bitcoinknots.org/files/$MAJOR_VERSION.x/$VERSION
+ARG TARBALL=bitcoin-$VERSION.tar.gz
 
-ADD ${_BASE_URL}/${_RELEASE}.tar.gz    /tmp/
-ADD ${_BASE_URL}/SHA256SUMS            /tmp/
-ADD ${_BASE_URL}/SHA256SUMS.asc        /tmp/
-COPY gpg/                              /tmp/gpg/
+ADD $BASE_URL/$TARBALL        /tmp/
+ADD $BASE_URL/SHA256SUMS      /tmp/
+ADD $BASE_URL/SHA256SUMS.asc  /tmp/
+COPY gpg/                     /tmp/gpg/
 
 WORKDIR /tmp
 
@@ -18,7 +20,7 @@ RUN gpg --import gpg/* && \
     gpg --verify SHA256SUMS.asc SHA256SUMS && \
     sha256sum -c SHA256SUMS --ignore-missing
 
-RUN tar -xzf ${_RELEASE}.tar.gz --strip-components=1
+RUN tar -xzf $TARBALL --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \
