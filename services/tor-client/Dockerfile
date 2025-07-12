@@ -6,20 +6,20 @@ RUN apk add --no-cache \
 
 ARG VERSION=0.4.8.9
 ARG BASE_URL=https://dist.torproject.org
-ARG TARBALL=tor-$VERSION.tar.gz
+ARG TARBALL=tor-${VERSION}.tar.gz
 
 WORKDIR /tmp
 
-ADD $BASE_URL/$TARBALL                .
-ADD $BASE_URL/$TARBALL.sha256sum      ./SHA256SUM
-ADD $BASE_URL/$TARBALL.sha256sum.asc  ./SHA256SUM.asc
-COPY gpg/                             ./gpg/
+ADD ${BASE_URL}/${TARBALL}                ${TARBALL}
+ADD ${BASE_URL}/${TARBALL}.sha256sum      SHA256SUM
+ADD ${BASE_URL}/${TARBALL}.sha256sum.asc  SHA256SUM.asc
+COPY gpg/                                 gpg/
 
 RUN gpg --import gpg/* && \
     gpg --verify SHA256SUM.asc SHA256SUM && \
     sha256sum -c SHA256SUM
 
-RUN tar -xzf $TARBALL --strip-components=1
+RUN tar xzf ${TARBALL} --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \

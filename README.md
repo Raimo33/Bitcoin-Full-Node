@@ -28,11 +28,12 @@ Images size:
 # directories where persistent data will be stored
 KNOTS_DATA=/mnt/hdd/bitcoin/knots
 TOR_DATA=/var/lib/bitcoin/tor
+I2P_DATA=/var/lib/bitcoin/i2pd
 
 # user ID that owns the data directories, will be used to run the containers
 UID=1000
 
-# your host machine public IP address, used by Tor to advertise the service
+# your host machine public IP address, used by Tor and i2p to advertise the service
 HOST_PUBLIC_IP=87.19.107.144
 
 # RPC credentials for Knots

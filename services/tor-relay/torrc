@@ -6,5 +6,3 @@ ExitRelay 0
 
 DirPort 9030
 DirPolicy accept *
-
-#TODO: enable bridge relay

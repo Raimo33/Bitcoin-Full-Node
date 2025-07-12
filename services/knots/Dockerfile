@@ -6,21 +6,21 @@ RUN apk add --no-cache \
 
 ARG MAJOR_VERSION=28
 ARG VERSION=28.1.knots20250305
-ARG BASE_URL=https://bitcoinknots.org/files/$MAJOR_VERSION.x/$VERSION
-ARG TARBALL=bitcoin-$VERSION.tar.gz
+ARG BASE_URL=https://bitcoinknots.org/files/${MAJOR_VERSION}.x/${VERSION}
+ARG TARBALL=bitcoin-${VERSION}.tar.gz
 
 WORKDIR /tmp
 
-ADD $BASE_URL/$TARBALL        .
-ADD $BASE_URL/SHA256SUMS      .
-ADD $BASE_URL/SHA256SUMS.asc  .
-COPY gpg/                     ./gpg/
+ADD ${BASE_URL}/${TARBALL}      ${TARBALL}
+ADD ${BASE_URL}/SHA256SUMS      SHA256SUMS
+ADD ${BASE_URL}/SHA256SUMS.asc  SHA256SUMS.asc
+COPY gpg/                       gpg/
 
 RUN gpg --import gpg/* && \
     gpg --verify SHA256SUMS.asc SHA256SUMS && \
     sha256sum -c SHA256SUMS --ignore-missing
 
-RUN tar -xzf $TARBALL --strip-components=1
+RUN tar xzf ${TARBALL} --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \
