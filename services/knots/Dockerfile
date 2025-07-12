@@ -4,24 +4,23 @@ RUN apk add --no-cache \
     build-base boost-dev zeromq-dev libevent-dev sqlite-dev \
     gnupg coreutils binutils
 
-ARG _BASE_URL=https://bitcoinknots.org/files/28.x/28.1.knots20250305
-ARG _RELEASE=bitcoin-28.1.knots20250305
-
-ADD ${_BASE_URL}/${_RELEASE}.tar.gz    /tmp/
-ADD ${_BASE_URL}/SHA256SUMS            /tmp/
-ADD ${_BASE_URL}/SHA256SUMS.asc        /tmp/
-COPY gpg/                              /tmp/gpg/
+ARG MAJOR_VERSION=28
+ARG VERSION=28.1.knots20250305
+ARG BASE_URL=https://bitcoinknots.org/files/${MAJOR_VERSION}.x/${VERSION}
+ARG TARBALL=bitcoin-${VERSION}.tar.gz
 
 WORKDIR /tmp
+
+ADD ${BASE_URL}/${TARBALL}      ${TARBALL}
+ADD ${BASE_URL}/SHA256SUMS      SHA256SUMS
+ADD ${BASE_URL}/SHA256SUMS.asc  SHA256SUMS.asc
+COPY gpg/                       gpg/
 
 RUN gpg --import gpg/* && \
     gpg --verify SHA256SUMS.asc SHA256SUMS && \
     sha256sum -c SHA256SUMS --ignore-missing
 
-RUN tar -xzf ${_RELEASE}.tar.gz && \
-    mv ${_RELEASE} bitcoin
-
-WORKDIR /tmp/bitcoin
+RUN tar xzf ${TARBALL} --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \
@@ -53,13 +52,11 @@ FROM alpine:3.22
 RUN apk add --no-cache \
     boost zeromq libevent sqlite
 
-COPY --from=builder /usr/bin/knots/ /usr/bin/
-COPY bitcoin.conf   /etc/knots/bitcoin.conf
+COPY --from=builder /usr/bin/knots/  /usr/bin/
+COPY bitcoin.conf                    /etc/knots/bitcoin.conf
 
 WORKDIR /var/lib/knots
 EXPOSE 8332
 
 VOLUME ["/var/lib/knots"]
 ENTRYPOINT ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
-
-#TODO fix unreachable node. ephemeral hidden service issue

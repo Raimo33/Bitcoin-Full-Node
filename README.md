@@ -4,8 +4,9 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 
 - **Full** blockchain state
 - Uses **Knots** to fight the spam
-- Enforces **Tor** for all connections
+- Enforces **Tor** or **i2p** for all connections
 - Acts as **Tor Relay** to help the Tor network
+- Acts as a **i2p Router** to help the i2p network
 - Uses **Alpine Linux** for lightweight images
 - **Compiled** from source for optimized binary
 - GPG **Signature verification** for all components
@@ -14,6 +15,7 @@ Images size:
 - Knots: 89.7MB
 - Tor client: 20.2MB
 - Tor relay: 20.4MB
+- i2p: 79.3MB
 
 ## First time setup instructions
 
@@ -26,11 +28,12 @@ Images size:
 # directories where persistent data will be stored
 KNOTS_DATA=/mnt/hdd/bitcoin/knots
 TOR_DATA=/var/lib/bitcoin/tor
+I2P_DATA=/var/lib/bitcoin/i2pd
 
 # user ID that owns the data directories, will be used to run the containers
 UID=1000
 
-# your host machine public IP address, used by Tor to advertise the service
+# your host machine public IP address, used by Tor and i2p to advertise the service
 HOST_PUBLIC_IP=87.19.107.144
 
 # RPC credentials for Knots
@@ -43,6 +46,8 @@ TOR_CONTROL_HASHED_PASSWORD=16:ADDBD7CF108C995F60F831F115BA5EB95322FC4645433CDEB
 ```
 
 WARNING: *if you already have tor installed on your system, make sure that your TOR_DATA directory is not the same as the one already used by your system tor installation. One is used inside the containers, the other is used by your system tor service.*
+
+WARNING: *if you plan to run the node for multiple sessions, make sure that the HOST_PUBLIC_IP is up to date with the current public IP of your host machine. It is strongly recommended to use a static IP*
 
 3. Build the Docker images:
    ```bash

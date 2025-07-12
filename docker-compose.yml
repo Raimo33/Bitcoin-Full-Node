@@ -1,7 +1,5 @@
 services:
 
-#TODO Fix p2p onion address not accessible from outside (likely a tor on alpine issue)
-
   tor-client:
     build:
       context: ./services/tor-client
@@ -15,6 +13,7 @@ services:
     networks:
       nodenet:
         ipv4_address: 172.28.0.2
+        ipv6_address: fd12:3456:789a::2
     # ports:
     # depends_on:
     restart: always
@@ -35,6 +34,7 @@ services:
     networks:
       nodenet:
         ipv4_address: 172.28.0.3
+        ipv6_address: fd12:3456:789a::3
     ports:
       - "9001:9001"
       - "9030:9030"
@@ -43,6 +43,29 @@ services:
     init: true
     user: ${UID}
     command: --Address ${HOST_PUBLIC_IP}
+
+  i2pd:
+    build:
+      context: ./services/i2pd
+      dockerfile: Dockerfile
+      # args:
+    container_name: i2pd
+    # environment:
+    volumes:
+      - ${I2P_DATA}:/var/lib/i2pd:rw
+    # secrets:
+    networks:
+      nodenet:
+        ipv4_address: 172.28.0.4
+        ipv6_address: fd12:3456:789a::4
+    ports:
+      - "17604:17604/tcp"
+      - "17604:17604/udp"
+    # depends_on:
+    restart: always
+    init: true
+    user: ${UID}
+    command: -host=${HOST_PUBLIC_IP}
 
   knots:
     build:
@@ -56,11 +79,13 @@ services:
     # secrets:
     networks:
       nodenet:
-        ipv4_address: 172.28.0.4
+        ipv4_address: 172.28.0.5
+        ipv6_address: fd12:3456:789a::5
     ports:
       - "8332:8332"
     depends_on:
       - tor-client
+      - i2pd
     restart: always
     init: true
     user: ${UID}
@@ -69,6 +94,8 @@ services:
 networks:
   nodenet:
     driver: bridge
+    enable_ipv6: true
     ipam:
       config:
         - subnet: 172.28.0.0/28
+        - subnet: fd12:3456:789a::/124
