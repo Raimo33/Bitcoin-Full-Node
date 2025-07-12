@@ -59,12 +59,15 @@ RUN apk add --no-cache \
     zeromq \
     libevent \
     sqlite \
+    sqlite-libs \
     boost-system \
     boost-filesystem \
     boost-program_options
 
 COPY --from=builder /usr/bin/knots/  /usr/bin/
 COPY bitcoin.conf                    /etc/knots/bitcoin.conf
+
+RUN ldd /usr/bin/bitcoind
 
 WORKDIR /var/lib/knots
 EXPOSE 8332
