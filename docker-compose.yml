@@ -55,11 +55,15 @@ services:
     networks:
       nodenet:
         ipv4_address: 172.28.0.4
-    # ports:
+    ports:
+      - "17604:17604/tcp"
+      - "17604:17604/udp"
+      - "4447:4447"
     # depends_on:
     restart: always
     init: true
     user: ${UID}
+    command: -host=${HOST_PUBLIC_IP}
 
   knots:
     build:

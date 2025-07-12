@@ -52,8 +52,8 @@ FROM alpine:3.22
 RUN apk add --no-cache \
     boost zeromq libevent sqlite
 
-COPY --from=builder /usr/bin/knots/ /usr/bin/
-COPY bitcoin.conf   /etc/knots/bitcoin.conf
+COPY --from=builder /usr/bin/knots/  /usr/bin/
+COPY bitcoin.conf                    /etc/knots/bitcoin.conf
 
 WORKDIR /var/lib/knots
 EXPOSE 8332

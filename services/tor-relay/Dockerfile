@@ -48,8 +48,8 @@ FROM alpine:3.22
 RUN apk add --no-cache \
     openssl zlib libevent
 
-COPY --from=builder /usr/bin/tor /usr/bin
-COPY torrc /etc/tor/torrc
+COPY --from=builder /usr/bin/tor  /usr/bin
+COPY torrc                        /etc/tor/torrc
 
 WORKDIR /var/lib/tor
 EXPOSE 9001 9030

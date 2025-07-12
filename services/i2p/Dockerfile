@@ -39,12 +39,14 @@ done
 
 FROM alpine:3.22
 
-RUN apk add --no-cache
+# RUN apk add --no-cache
 
-COPY --from=builder /usr/bin/i2pd/ /usr/bin/
+COPY --from=builder /usr/bin/i2pd/  /usr/bin/
+COPY i2pd.conf                      /etc/i2pd/i2pd.conf
+COPY tunnels.conf                   /etc/i2pd/tunnels.conf
 
 WORKDIR /var/lib/i2p
-EXPOSE 
+EXPOSE 17604/tcp 17604/udp 4447
 
 VOLUME ["/var/lib/i2p"]
-ENTRYPOINT [""]
+ENTRYPOINT ["i2pd", "--conf=/etc/i2pd/i2pd.conf", "--tunconf=/etc/i2pd/tunnels.conf"]
