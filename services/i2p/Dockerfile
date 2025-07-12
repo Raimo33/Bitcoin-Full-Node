@@ -46,7 +46,7 @@ COPY i2pd.conf                      /etc/i2pd/i2pd.conf
 COPY tunnels.conf                   /etc/i2pd/tunnels.conf
 
 WORKDIR /var/lib/i2p
-EXPOSE 17604/tcp 17604/udp 4447
+EXPOSE 17604/tcp 17604/udp
 
 VOLUME ["/var/lib/i2p"]
 ENTRYPOINT ["i2pd", "--conf=/etc/i2pd/i2pd.conf", "--tunconf=/etc/i2pd/tunnels.conf"]

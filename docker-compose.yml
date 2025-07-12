@@ -58,7 +58,6 @@ services:
     ports:
       - "17604:17604/tcp"
       - "17604:17604/udp"
-      - "4447:4447"
     # depends_on:
     restart: always
     init: true
@@ -77,7 +76,7 @@ services:
     # secrets:
     networks:
       nodenet:
-        ipv4_address: 172.28.0.4
+        ipv4_address: 172.28.0.5
     ports:
       - "8332:8332"
     depends_on:
