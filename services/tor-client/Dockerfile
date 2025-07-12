@@ -1,8 +1,13 @@
 FROM alpine:3.22 AS builder
 
 RUN apk add --no-cache \
-    build-base libevent-dev openssl-dev zlib-dev \
-    gnupg coreutils binutils 
+    build-base \
+    libevent-dev \
+    openssl-dev \
+    zlib-dev \
+    gnupg \
+    coreutils \
+    binutils 
 
 ARG VERSION=0.4.8.9
 ARG BASE_URL=https://dist.torproject.org
@@ -47,7 +52,9 @@ done
 FROM alpine:3.22
 
 RUN apk add --no-cache \
-    openssl zlib libevent
+    openssl \
+    zlib \
+    libevent
 
 COPY --from=builder /usr/bin/tor  /usr/bin
 COPY torrc                        /etc/tor/torrc

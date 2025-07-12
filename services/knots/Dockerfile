@@ -1,8 +1,14 @@
 FROM alpine:3.22 AS builder
 
 RUN apk add --no-cache \
-    build-base boost-dev zeromq-dev libevent-dev sqlite-dev \
-    gnupg coreutils binutils
+    build-base \
+    boost-dev \
+    zeromq-dev \
+    libevent-dev \
+    sqlite-dev \
+    gnupg \
+    coreutils \
+    binutils
 
 ARG MAJOR_VERSION=28
 ARG VERSION=28.1.knots20250305
@@ -50,7 +56,12 @@ done
 FROM alpine:3.22
 
 RUN apk add --no-cache \
-    boost zeromq libevent sqlite
+    zeromq \
+    libevent \
+    sqlite \
+    boost-system \
+    boost-filesystem \
+    boost-program_options
 
 COPY --from=builder /usr/bin/knots/  /usr/bin/
 COPY bitcoin.conf                    /etc/knots/bitcoin.conf
