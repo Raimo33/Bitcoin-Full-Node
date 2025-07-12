@@ -15,7 +15,7 @@ Images size:
 - Knots: 89.7MB
 - Tor client: 20.2MB
 - Tor relay: 20.4MB
-- i2p: 
+- i2p: 79.3MB
 
 ## First time setup instructions
 
