@@ -113,7 +113,7 @@ services:
     user: ${UID}
     command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
     healthcheck:
-      test: bitcoin-cli -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} getblockchaininfo"
+      test: bitcoin-cli -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} getblockchaininfo
       interval: 5m
       timeout: 15s
       start_period: 2m
