@@ -53,7 +53,8 @@ FROM alpine:3.22
 RUN apk add --no-cache \
     openssl \
     zlib \
-    libevent
+    libevent \
+    curl
 
 COPY --from=builder /usr/bin/tor  /usr/bin
 COPY torrc                        /etc/tor/torrc

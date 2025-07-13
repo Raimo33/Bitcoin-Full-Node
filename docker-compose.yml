@@ -20,6 +20,12 @@ services:
     init: true
     user: ${UID}
     command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
+    healthcheck:
+      test: curl -x socks5h://127.0.0.1:9050 https://check.torproject.org/api/ip | grep -q '"IsTor":true'
+      interval: 5m
+      timeout: 15s
+      start_period: 60s
+      start_interval: 10s
 
   tor-relay:
     build:
@@ -43,6 +49,12 @@ services:
     init: true
     user: ${UID}
     command: --Address ${HOST_PUBLIC_IP}
+    healthcheck:
+      test: curl -sf http://127.0.1:9030/tor/status-vote/current/consensus
+      interval: 5m
+      timeout: 15s
+      start_period: 60s
+      start_interval: 10s
 
   i2pd:
     build:
@@ -66,6 +78,12 @@ services:
     init: true
     user: ${UID}
     command: -host=${HOST_PUBLIC_IP}
+    healthcheck:
+      test: echo -e "HELLO VERSION MIN=3.1 MAX=3.1\n" | nc 127.0.0.1 7656 | grep -q "RESULT=OK"
+      interval: 5m
+      timeout: 15s
+      start_period: 60s
+      start_interval: 10s
     ulimits:
       nofile:
         soft: 4096
@@ -94,6 +112,12 @@ services:
     init: true
     user: ${UID}
     command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
+    healthcheck:
+      test: bitcoin-cli -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} getblockchaininfo"
+      interval: 5m
+      timeout: 15s
+      start_period: 2m
+      start_interval: 10s
 
 networks:
   nodenet:
