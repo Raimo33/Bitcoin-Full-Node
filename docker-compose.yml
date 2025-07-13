@@ -66,6 +66,10 @@ services:
     init: true
     user: ${UID}
     command: -host=${HOST_PUBLIC_IP}
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 4096
 
   knots:
     build:
