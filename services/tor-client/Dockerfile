@@ -5,6 +5,8 @@ RUN apk add --no-cache \
     libevent-dev \
     openssl-dev \
     zlib-dev \
+    xz-dev \
+    zstd-dev \
     gnupg \
     coreutils \
     binutils 
@@ -13,7 +15,7 @@ ARG VERSION=0.4.8.9
 ARG BASE_URL=https://dist.torproject.org
 ARG TARBALL=tor-${VERSION}.tar.gz
 
-WORKDIR /tmp
+WORKDIR /opt/tor
 
 ADD ${BASE_URL}/${TARBALL}                ${TARBALL}
 ADD ${BASE_URL}/${TARBALL}.sha256sum      SHA256SUM
@@ -28,7 +30,7 @@ RUN tar xzf ${TARBALL} --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \
-    --bindir=/usr/bin/tor \
+    --bindir=/opt/tor/bin \
     --disable-dependency-tracking \
     --disable-unittests \
     --disable-system-torrc \
@@ -43,11 +45,7 @@ RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
 RUN make -j$(nproc)
 RUN make install
 
-RUN for f in /usr/bin/tor/*; do \
-  if file "$f" | grep -q ELF; then \
-    strip --strip-unneeded "$f"; \
-  fi; \
-done
+RUN strip --strip-unneeded /opt/tor/bin/tor
 
 FROM alpine:3.22
 
@@ -55,10 +53,12 @@ RUN apk add --no-cache \
     openssl \
     zlib \
     libevent \
+    xz \
+    zstd \
     curl
 
-COPY --from=builder /usr/bin/tor  /usr/bin
-COPY torrc                        /etc/tor/torrc
+COPY --from=builder /opt/tor/bin/tor  /usr/local/bin/tor
+COPY torrc                            /etc/tor/torrc
 
 WORKDIR /var/lib/tor
 

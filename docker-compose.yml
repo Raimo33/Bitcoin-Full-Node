@@ -97,7 +97,7 @@ services:
     container_name: knots
     # environment:
     volumes:
-      - ${KNOTS_DATA}:/var/lib/knots:rw
+      - ${KNOTS_DATA}:/var/lib/bitcoin:rw
     # secrets:
     networks:
       nodenet:

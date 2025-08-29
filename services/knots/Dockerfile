@@ -15,7 +15,7 @@ ARG VERSION=28.1.knots20250305
 ARG BASE_URL=https://bitcoinknots.org/files/${MAJOR_VERSION}.x/${VERSION}
 ARG TARBALL=bitcoin-${VERSION}.tar.gz
 
-WORKDIR /tmp
+WORKDIR /opt/bitcoin
 
 ADD ${BASE_URL}/${TARBALL}      ${TARBALL}
 ADD ${BASE_URL}/SHA256SUMS      SHA256SUMS
@@ -30,47 +30,42 @@ RUN tar xzf ${TARBALL} --strip-components=1
 
 RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
     --quiet \
-    --bindir=/usr/bin/knots \
-    --disable-dependency-tracking \
-    --disable-tests \
-    --disable-gui-tests \
-    --disable-bench \
-    --disable-fuzz-binary \
-    --disable-man \
-    --disable-shared \
-    --disable-static \
+    --bindir=/opt/bitcoin/bin \
+    --with-daemon \
     --enable-wallet \
-    --without-bdb \
-    --with-sqlite \
-    --with-gui=no
+    --disable-fuzz-binary \
+    --disable-debug \
+    --disable-tests \
+    --disable-bench \
+    --disable-man \
+    --disable-ccache \
+    --disable-dependency-tracking \
+    --without-libs \
+    --without-utils \
+    --without-gui \
+    --without-bdb
 
 RUN make -j$(nproc)
 RUN make install
 
-RUN for f in /usr/bin/knots/*; do \
-  if file "$f" | grep -q ELF; then \
-    strip --strip-unneeded "$f"; \
-  fi; \
-done
+RUN strip --strip-unneeded /opt/bitcoin/bin/*
 
 FROM alpine:3.22
 
 RUN apk add --no-cache \
     zeromq \
     libevent \
-    sqlite \
     sqlite-libs \
     boost-system \
     boost-filesystem \
     boost-program_options
 
-COPY --from=builder /usr/bin/knots/  /usr/bin/
-COPY bitcoin.conf                    /etc/knots/bitcoin.conf
+COPY --from=builder /opt/bitcoin/bin/   /usr/local/bin/
+COPY bitcoin.conf                       /etc/bitcoin/bitcoin.conf
 
-RUN ldd /usr/bin/bitcoind
-
-WORKDIR /var/lib/knots
+WORKDIR /var/lib/bitcoin
 EXPOSE 8332
 
-VOLUME ["/var/lib/knots"]
-ENTRYPOINT ["bitcoind", "-conf=/etc/knots/bitcoin.conf"]
+VOLUME ["/var/lib/bitcoin"]
+
+ENTRYPOINT ["bitcoind", "-conf=/etc/bitcoin/bitcoin.conf", "-datadir=/var/lib/bitcoin"]
