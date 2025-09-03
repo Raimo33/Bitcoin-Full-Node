@@ -31,6 +31,9 @@ RUN CXXFLAGS="-march=native" ./configure \
     --quiet \
     --bindir=/opt/bitcoin/bin \
     --with-daemon \
+    --disable-util-tx \
+    --disable-util-wallet \
+    --disable-util-util \
     --disable-wallet \
     --disable-zmq \
     --disable-fuzz-binary \
@@ -41,7 +44,6 @@ RUN CXXFLAGS="-march=native" ./configure \
     --disable-ccache \
     --disable-dependency-tracking \
     --without-libs \
-    --without-utils \
     --without-gui \
     --without-bdb
 
