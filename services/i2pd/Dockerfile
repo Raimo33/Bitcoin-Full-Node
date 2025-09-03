@@ -29,8 +29,7 @@ RUN tar xzf ${TARBALL} --strip-components=1
 WORKDIR /opt/i2pd/build
 
 RUN cmake . \
-    -DCMAKE_CXX_FLAGS="-O2 -march=native -pipe -flto" \
-    -DCMAKE_EXE_LINKER_FLAGS="-flto" \
+    -DCMAKE_CXX_FLAGS="-march=native" \
     -DCMAKE_INSTALL_BINDIR=/opt/i2pd/bin \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_LIBRARY=OFF \

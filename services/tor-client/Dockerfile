@@ -28,7 +28,7 @@ RUN gpg --import gpg/* && \
 
 RUN tar xzf ${TARBALL} --strip-components=1
 
-RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
+RUN CXXFLAGS="-march=native" ./configure \
     --quiet \
     --bindir=/opt/tor/bin \
     --disable-dependency-tracking \

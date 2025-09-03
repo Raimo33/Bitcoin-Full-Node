@@ -3,7 +3,6 @@ FROM alpine:3.22 AS builder
 RUN apk add --no-cache \
     build-base \
     boost-dev \
-    zeromq-dev \
     libevent-dev \
     sqlite-dev \
     gnupg \
@@ -28,11 +27,12 @@ RUN gpg --import gpg/* && \
 
 RUN tar xzf ${TARBALL} --strip-components=1
 
-RUN CXXFLAGS="-O2 -march=native -pipe -flto" LDFLAGS="-flto" ./configure \
+RUN CXXFLAGS="-march=native" ./configure \
     --quiet \
     --bindir=/opt/bitcoin/bin \
     --with-daemon \
-    --enable-wallet \
+    --disable-wallet \
+    --disable-zmq \
     --disable-fuzz-binary \
     --disable-debug \
     --disable-tests \
@@ -53,7 +53,6 @@ RUN strip --strip-unneeded /opt/bitcoin/bin/*
 FROM alpine:3.22
 
 RUN apk add --no-cache \
-    zeromq \
     libevent \
     sqlite-libs \
     boost-system \
