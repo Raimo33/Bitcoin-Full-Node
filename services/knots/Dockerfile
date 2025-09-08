@@ -2,15 +2,17 @@ FROM alpine:3.22 AS builder
 
 RUN apk add --no-cache \
     build-base \
+    gnupg \
+    cmake \
     boost-dev \
     libevent-dev \
     sqlite-dev \
-    gnupg \
+    zeromq-dev \
     coreutils \
     binutils
 
-ARG MAJOR_VERSION=28
-ARG VERSION=28.1.knots20250305
+ARG MAJOR_VERSION=29
+ARG VERSION=29.1.knots20250903
 ARG BASE_URL=https://bitcoinknots.org/files/${MAJOR_VERSION}.x/${VERSION}
 ARG TARBALL=bitcoin-${VERSION}.tar.gz
 
@@ -27,30 +29,31 @@ RUN gpg --import gpg/* && \
 
 RUN tar xzf ${TARBALL} --strip-components=1
 
-RUN CXXFLAGS="-march=native" ./configure \
-    --quiet \
-    --bindir=/opt/bitcoin/bin \
-    --with-daemon \
-    --disable-util-tx \
-    --disable-util-wallet \
-    --disable-util-util \
-    --disable-wallet \
-    --disable-zmq \
-    --disable-fuzz-binary \
-    --disable-debug \
-    --disable-tests \
-    --disable-bench \
-    --disable-man \
-    --disable-ccache \
-    --disable-dependency-tracking \
-    --without-libs \
-    --without-gui \
-    --without-bdb
+WORKDIR /opt/bitcoin/build
 
-RUN make -j$(nproc)
-RUN make install
+RUN cmake .. \
+    -DCMAKE_INSTALL_PREFIX="/usr/local/" \
+    -DBUILD_DAEMON="ON" \
+    -DBUILD_CLI="ON" \
+    -DENABLE_WALLET="OFF" \
+    -DWITH_ZMQ="OFF" \
+    -DBUILD_TESTS="OFF" \
+    -DBUILD_GUI="OFF" \
+    -DBUILD_TX="OFF" \
+    -DBUILD_UTIL="OFF" \
+    -DBUILD_WALLET_TOOL="OFF" \
+    -DBUILD_BENCH="OFF" \
+    -DBUILD_FUZZ_BINARY="OFF" \
+    -DBUILD_UTIL_CHAINSTATE="OFF" \
+    -DWITH_BDB="OFF" \
+    -DWITH_USDT="OFF" \
+    -DINSTALL_MAN="OFF" \
+    -DWITH_CCACHE="OFF"
 
-RUN strip --strip-unneeded /opt/bitcoin/bin/*
+RUN cmake --build . --parallel $(nproc)
+RUN cmake --install .
+
+RUN strip --strip-unneeded /usr/local/bin/*
 
 FROM alpine:3.22
 
@@ -61,8 +64,8 @@ RUN apk add --no-cache \
     boost-filesystem \
     boost-program_options
 
-COPY --from=builder /opt/bitcoin/bin/   /usr/local/bin/
-COPY bitcoin.conf                       /etc/bitcoin/bitcoin.conf
+COPY --from=builder /usr/local/bin/   /usr/local/bin/
+COPY bitcoin.conf                     /etc/bitcoin/bitcoin.conf
 
 WORKDIR /var/lib/bitcoin
 EXPOSE 8332
