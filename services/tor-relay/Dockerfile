@@ -1,4 +1,4 @@
-FROM alpine:3.22 AS builder
+FROM alpine:3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
@@ -46,7 +46,7 @@ RUN make install
 
 RUN strip --strip-unneeded /opt/tor/bin/tor
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 RUN apk add --no-cache \
     openssl \

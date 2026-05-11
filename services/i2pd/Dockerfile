@@ -1,4 +1,4 @@
-FROM alpine:3.22 AS builder
+FROM alpine:3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
@@ -39,7 +39,7 @@ RUN cmake --build . --target install --parallel $(nproc)
 
 RUN strip --strip-unneeded /opt/i2pd/bin/i2pd
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 RUN apk add --no-cache \
     openssl \

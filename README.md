@@ -12,10 +12,10 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 - GPG **Signature verification** for all components
 
 Images size:
-- Knots: 25.8 MB
-- Tor client: 21.8 MB
-- Tor relay: 22 MB
-- i2p: 18.2 MB
+- Knots: 25.7 MB
+- Tor client: 22.2 MB
+- Tor relay: 22.4 MB
+- i2p: 18.5 MB
 
 ## First time setup instructions
 
