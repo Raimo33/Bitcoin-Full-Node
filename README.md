@@ -26,9 +26,9 @@ Images size:
 2. Edit the `.env` file:
 ```bash
 # directories where persistent data will be stored
-KNOTS_DATA=/mnt/hdd/bitcoin/knots
-TOR_DATA=/var/lib/bitcoin/tor
-I2P_DATA=/var/lib/bitcoin/i2pd
+KNOTS_DATA=/mnt/bitcoin/knots
+TOR_DATA=/mnt/bitcoin/tor
+I2P_DATA=/mnt/bitcoin/i2pd
 
 # user ID that owns the data directories, will be used to run the containers
 UID=1000
