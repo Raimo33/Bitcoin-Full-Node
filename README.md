@@ -42,12 +42,16 @@ RPC_PASSWORD=your_rpc_password
 
 # Tor control credentials used internally
 TOR_CONTROL_PASSWORD=your_tor_control_password
-TOR_CONTROL_HASHED_PASSWORD=16:ADDBD7CF108C995F60F831F115BA5EB95322FC4645433CDEB8948A57DF
 ```
 
 WARNING: *if you already have tor installed on your system, make sure that your TOR_DATA directory is not the same as the one already used by your system tor installation. One is used inside the containers, the other is used by your system tor service.*
 
 WARNING: *if you plan to run the node for multiple sessions, make sure that the HOST_PUBLIC_IP is up to date with the current public IP of your host machine. It is strongly recommended to use a static IP*
+
+The Tor control password is used by Knots to ask Tor to create the node's onion
+service. The Tor client container derives the hashed control password from
+`TOR_CONTROL_PASSWORD` at startup, so the hash cannot drift from the value passed
+to Knots.
 
 3. Build the Docker images:
    ```bash

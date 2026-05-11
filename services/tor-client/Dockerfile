@@ -59,8 +59,9 @@ RUN apk add --no-cache \
 
 COPY --from=builder /opt/tor/bin/tor  /usr/local/bin/tor
 COPY torrc                            /etc/tor/torrc
+COPY entrypoint.sh                    /usr/local/bin/tor-client-entrypoint
 
 WORKDIR /var/lib/tor
 
 VOLUME ["/var/lib/tor"]
-ENTRYPOINT ["tor", "-f", "/etc/tor/torrc"]
+ENTRYPOINT ["tor-client-entrypoint"]

@@ -6,7 +6,8 @@ services:
       dockerfile: Dockerfile
       # args:
     container_name: tor-client
-    # environment:
+    environment:
+      TOR_CONTROL_PASSWORD: ${TOR_CONTROL_PASSWORD}
     volumes:
       - ${TOR_DATA}:/var/lib/tor:rw
     # secrets:
@@ -19,7 +20,6 @@ services:
     restart: always
     init: true
     user: ${UID}
-    command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
     healthcheck:
       test: curl -x socks5h://127.0.0.1:9050 https://check.torproject.org/api/ip | grep -q '"IsTor":true'
       interval: 5m
@@ -106,8 +106,10 @@ services:
     ports:
       - "8332:8332"
     depends_on:
-      - tor-client
-      - i2pd
+      tor-client:
+        condition: service_healthy
+      i2pd:
+        condition: service_started
     restart: always
     init: true
     user: ${UID}
