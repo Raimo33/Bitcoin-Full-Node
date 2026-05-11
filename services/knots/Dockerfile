@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     binutils
 
 ARG MAJOR_VERSION=29
-ARG VERSION=29.1.knots20250903
+ARG VERSION=29.3.knots20260508
 ARG BASE_URL=https://bitcoinknots.org/files/${MAJOR_VERSION}.x/${VERSION}
 ARG TARBALL=bitcoin-${VERSION}.tar.gz
 
@@ -33,6 +33,7 @@ WORKDIR /opt/bitcoin/build
 
 RUN cmake .. \
     -DCMAKE_INSTALL_PREFIX="/usr/local/" \
+    -DRDTS_CONSENT=IMPLICIT \
     -DBUILD_DAEMON="ON" \
     -DBUILD_CLI="ON" \
     -DENABLE_WALLET="OFF" \
