@@ -13,9 +13,9 @@ This project sets up a minimal Bitcoin full node with the maximum privacy.
 
 Images size:
 - Knots: 25.8 MB
-- Tor client: 27.9 MB
-- Tor relay: 28.1 MB
-- i2p: 24.2 MB
+- Tor client: 21.8 MB
+- Tor relay: 22 MB
+- i2p: 18.2 MB
 
 ## First time setup instructions
 
