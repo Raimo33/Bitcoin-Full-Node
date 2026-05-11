@@ -51,19 +51,19 @@ WARNING: *if you plan to run the node for multiple sessions, make sure that the 
 
 3. Build the Docker images:
    ```bash
-   docker-compose build
+   docker compose build
    ```
 
 ## Run the services
 
 ```bash
-docker-compose up -d   # Start
-docker-compose down    # Stop
+docker compose up -d   # Start
+docker compose down    # Stop
 ```
 
 NOTE: *Docker automatically stops and restarts containers on system reboot.*
 
-more information about the available docker-compose commands can be found in the [docker-compose documentation](https://docs.docker.com/reference/cli/docker/compose/).
+more information about the available docker compose commands can be found in the [docker compose documentation](https://docs.docker.com/reference/cli/docker/compose/).
 
 ## Accessing the node
 
