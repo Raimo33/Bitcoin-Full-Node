@@ -56,7 +56,7 @@ RUN cmake --install .
 
 RUN strip --strip-unneeded /usr/local/bin/*
 
-FROM alpine:3.22
+FROM alpine:3.23
 
 RUN apk add --no-cache \
     libevent \
