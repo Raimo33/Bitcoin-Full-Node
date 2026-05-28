@@ -1,0 +1,15 @@
+# PATCH: 此為 AI 生成的修復建議，請人工審查後合併
+# Tor configuration for Bitcoin hidden service
+DataDirectory /var/lib/tor
+
+# Run as a relay or hidden service, not just client
+SOCKSPort 0
+Log notice file /var/log/tor/notices.log
+
+# Hidden service configuration
+HiddenServiceDir /var/lib/tor/hidden_service/
+HiddenServicePort 8333 bitcoin:8333
+
+# Ensure we can reach HSDirs
+UseBridges 0
+ClientOnly 0
