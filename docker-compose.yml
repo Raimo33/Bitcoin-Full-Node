@@ -1,130 +1,34 @@
+# PATCH: 此為 AI 生成的修復建議，請人工審查後合併
+version: '3.8'
 services:
-
-  tor-client:
-    build:
-      context: ./services/tor-client
-      dockerfile: Dockerfile
-      # args:
-    container_name: tor-client
-    # environment:
+  bitcoin:
+    image: ruimarinho/bitcoin-core:latest
+    container_name: bitcoin
     volumes:
-      - ${TOR_DATA}:/var/lib/tor:rw
-    # secrets:
-    networks:
-      nodenet:
-        ipv4_address: 172.28.0.2
-        ipv6_address: fd12:3456:789a::2
-    # ports:
-    # depends_on:
-    restart: always
-    init: true
-    user: ${UID}
-    command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
-    healthcheck:
-      test: curl -x socks5h://127.0.0.1:9050 https://check.torproject.org/api/ip | grep -q '"IsTor":true'
-      interval: 5m
-      timeout: 15s
-      start_period: 60s
-      start_interval: 10s
-
-  tor-relay:
-    build:
-      context: ./services/tor-relay
-      dockerfile: Dockerfile
-      # args:
-    container_name: tor-relay
-    # environment:
-    volumes:
-      - ${TOR_DATA}:/var/lib/tor:rw
-    # secrets:
-    networks:
-      nodenet:
-        ipv4_address: 172.28.0.3
-        ipv6_address: fd12:3456:789a::3
+      - bitcoin_data:/home/bitcoin/.bitcoin
+      - ./bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf
     ports:
-      - "9001:9001"
-      - "9030:9030"
-    # depends_on:
-    restart: always
-    init: true
-    user: ${UID}
-    command: --Address ${HOST_PUBLIC_IP}
-    healthcheck:
-      test: curl -sf http://127.0.1:9030/tor/status-vote/current/consensus
-      interval: 5m
-      timeout: 15s
-      start_period: 60s
-      start_interval: 10s
-
-  i2pd:
-    build:
-      context: ./services/i2pd
-      dockerfile: Dockerfile
-      # args:
-    container_name: i2pd
-    # environment:
-    volumes:
-      - ${I2P_DATA}:/var/lib/i2pd:rw
-    # secrets:
+      - "8333:8333"
     networks:
-      nodenet:
-        ipv4_address: 172.28.0.4
-        ipv6_address: fd12:3456:789a::4
-    ports:
-      - "17604:17604/tcp"
-      - "17604:17604/udp"
-    # depends_on:
-    restart: always
-    init: true
-    user: ${UID}
-    command: -host=${HOST_PUBLIC_IP}
-    healthcheck:
-      test: echo -e "HELLO VERSION MIN=3.1 MAX=3.1\n" | nc 127.0.0.1 7656 | grep -q "RESULT=OK"
-      interval: 5m
-      timeout: 15s
-      start_period: 60s
-      start_interval: 10s
-    ulimits:
-      nofile:
-        soft: 4096
-        hard: 4096
+      - bitcoin_net
+    restart: unless-stopped
 
-  knots:
-    build:
-      context: ./services/knots
-      dockerfile: Dockerfile
-      # args:
-    container_name: knots
-    # environment:
+  tor:
+    image: goldy/tor-hidden-service:latest
+    container_name: tor
     volumes:
-      - ${KNOTS_DATA}:/var/lib/bitcoin:rw
-    # secrets:
+      - tor_data:/var/lib/tor
+      - ./tor/torrc:/etc/tor/torrc
     networks:
-      nodenet:
-        ipv4_address: 172.28.0.5
-        ipv6_address: fd12:3456:789a::5
-    ports:
-      - "8332:8332"
+      - bitcoin_net
+    restart: unless-stopped
     depends_on:
-      - tor-client
-      - i2pd
-    restart: always
-    init: true
-    user: ${UID}
-    command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
-    healthcheck:
-      test: bitcoin-cli -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} getblockchaininfo
-      interval: 5m
-      timeout: 15s
-      start_period: 2m
-      start_interval: 10s
+      - bitcoin
 
 networks:
-  nodenet:
+  bitcoin_net:
     driver: bridge
-    enable_ipv6: true
-    ipam:
-      config:
-        - subnet: 172.28.0.0/28
-        - subnet: fd12:3456:789a::/124
-        
+
+volumes:
+  bitcoin_data:
+  tor_data:
