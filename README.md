@@ -34,7 +34,7 @@ I2P_DATA=/mnt/bitcoin/i2pd
 UID=1000
 
 # your host machine public IP address, used by Tor and i2p to advertise the service
-HOST_PUBLIC_IP=87.19.107.144
+HOST_PUBLIC_IP=YOUR.PUBLIC.IP.ADDRESS
 
 # RPC credentials for Knots
 RPC_USER=your_rpc_user
