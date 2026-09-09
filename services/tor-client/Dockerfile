@@ -1,4 +1,4 @@
-FROM alpine:3.23 AS builder
+FROM alpine:3.24 AS builder
 
 RUN apk add --no-cache \
     build-base \
@@ -11,7 +11,7 @@ RUN apk add --no-cache \
     coreutils \
     binutils 
 
-ARG VERSION=0.4.8.9
+ARG VERSION=0.4.9.12
 ARG BASE_URL=https://dist.torproject.org
 ARG TARBALL=tor-${VERSION}.tar.gz
 
@@ -47,7 +47,7 @@ RUN make install
 
 RUN strip --strip-unneeded /opt/tor/bin/tor
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 RUN apk add --no-cache \
     openssl \

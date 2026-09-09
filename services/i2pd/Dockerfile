@@ -1,4 +1,4 @@
-FROM alpine:3.23 AS builder
+FROM alpine:3.24 AS builder
 
 RUN apk add --no-cache \
     build-base \
@@ -9,7 +9,7 @@ RUN apk add --no-cache \
     coreutils \
     binutils
 
-ARG VERSION=2.57.0
+ARG VERSION=2.61.0
 ARG BASE_URL=https://github.com/PurpleI2P/i2pd
 ARG TARBALL=i2pd-$VERSION.tar.gz
 
@@ -39,7 +39,7 @@ RUN cmake --build . --target install --parallel $(nproc)
 
 RUN strip --strip-unneeded /opt/i2pd/bin/i2pd
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 RUN apk add --no-cache \
     openssl \
