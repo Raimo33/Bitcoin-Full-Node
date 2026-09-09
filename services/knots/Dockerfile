@@ -4,6 +4,7 @@ RUN apk add --no-cache \
     build-base \
     gnupg \
     cmake \
+    ninja-build \
     boost-dev \
     libevent-dev \
     sqlite-dev \
@@ -31,7 +32,9 @@ RUN tar xzf ${TARBALL} --strip-components=1
 
 WORKDIR /opt/bitcoin/build
 
-RUN cmake .. \
+ENV PATH="/usr/lib/ninja-build/bin:${PATH}"
+
+RUN cmake -G Ninja .. \
     -DCMAKE_INSTALL_PREFIX="/usr/local/" \
     -DBUILD_DAEMON="ON" \
     -DBUILD_CLI="ON" \
