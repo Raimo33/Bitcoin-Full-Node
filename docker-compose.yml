@@ -19,7 +19,6 @@ services:
     restart: always
     init: true
     user: ${UID}
-    command: --HashedControlPassword ${TOR_CONTROL_HASHED_PASSWORD}
     healthcheck:
       test: curl -x socks5h://127.0.0.1:9050 https://check.torproject.org/api/ip | grep -q '"IsTor":true'
       interval: 5m
@@ -98,6 +97,8 @@ services:
     # environment:
     volumes:
       - ${KNOTS_DATA}:/var/lib/bitcoin:rw
+      # Knots reads the cookie at the absolute path advertised by Tor.
+      - ${TOR_DATA}:/var/lib/tor:ro
     # secrets:
     networks:
       nodenet:
@@ -111,7 +112,7 @@ services:
     restart: always
     init: true
     user: ${UID}
-    command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} -torpassword=${TOR_CONTROL_PASSWORD}
+    command: -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD}
     healthcheck:
       test: bitcoin-cli -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASSWORD} getblockchaininfo
       interval: 5m

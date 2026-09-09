@@ -39,10 +39,6 @@ HOST_PUBLIC_IP=YOUR.PUBLIC.IP.ADDRESS
 # RPC credentials for Knots
 RPC_USER=your_rpc_user
 RPC_PASSWORD=your_rpc_password
-
-# Tor control credentials used internally
-TOR_CONTROL_PASSWORD=your_tor_control_password
-TOR_CONTROL_HASHED_PASSWORD=16:ADDBD7CF108C995F60F831F115BA5EB95322FC4645433CDEB8948A57DF
 ```
 
 WARNING: *if you already have tor installed on your system, make sure that your TOR_DATA directory is not the same as the one already used by your system tor installation. One is used inside the containers, the other is used by your system tor service.*
