@@ -6,6 +6,7 @@ RUN apk add --no-cache \
     openssl-dev \
     gnupg \
     cmake \
+    ninja-build \
     coreutils \
     binutils
 
@@ -28,7 +29,9 @@ RUN tar xzf ${TARBALL} --strip-components=1
 
 WORKDIR /opt/i2pd/build
 
-RUN cmake . \
+ENV PATH="/usr/lib/ninja-build/bin:${PATH}"
+
+RUN cmake -G Ninja . \
     -DCMAKE_CXX_FLAGS="-march=native" \
     -DCMAKE_INSTALL_BINDIR=/opt/i2pd/bin \
     -DCMAKE_BUILD_TYPE=Release \
